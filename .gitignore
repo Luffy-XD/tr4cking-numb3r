@@ -1,0 +1,8 @@
+/vendor/
+/node_modules/
+.env
+/storage/backups/
+/storage/logs/
+/public/assets/build/
+/.idea/
+/.vscode/

@@ -1,0 +1,15 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.table-actions .btn {
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+.card-dashboard {
+    border-left: 4px solid var(--bs-primary);
+}
+.chart-placeholder {
+    height: 280px;
+}
