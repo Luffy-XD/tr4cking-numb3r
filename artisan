@@ -1,0 +1,45 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use App\Support\Env;
+use Database\Migrations\CreateTables;
+use Database\Seeders\DatabaseSeeder;
+use App\Services\BackupService;
+
+Env::load(__DIR__);
+
+$command = $argv[1] ?? null;
+
+switch ($command) {
+    case 'migrate':
+        (new CreateTables())->up();
+        echo "Migrations completed.\n";
+        break;
+    case 'db:seed':
+        (new DatabaseSeeder())->run();
+        echo "Database seeding completed.\n";
+        break;
+    case 'backup:run':
+        $path = (new BackupService())->createBackup();
+        echo "Backup created at {$path}\n";
+        break;
+    case 'backup:restore':
+        $file = $argv[2] ?? null;
+        if (!$file || !file_exists($file)) {
+            echo "Please provide a valid SQL file path.\n";
+            exit(1);
+        }
+        $sql = file_get_contents($file);
+        (new BackupService())->restore($sql);
+        echo "Backup restored successfully.\n";
+        break;
+    default:
+        echo "Available commands:\n";
+        echo "  migrate\n";
+        echo "  db:seed\n";
+        echo "  backup:run\n";
+        echo "  backup:restore <file>\n";
+        exit($command ? 1 : 0);
+}
