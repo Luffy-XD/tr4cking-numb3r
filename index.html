@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Informasi Arsip Surat BPSDM Aceh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9Qev4r1d0bMA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <section id="login-view" class="login-view">
+      <div class="login-card">
+        <img src="assets/img/logo.svg" alt="Logo BPSDM Aceh" class="login-logo" />
+        <h1>Sistem Informasi Arsip Surat</h1>
+        <p class="tagline">Badan Pengembangan Sumber Daya Manusia Aceh</p>
+        <div id="login-message" class="login-message hidden"></div>
+        <form id="login-form" class="form-grid">
+          <div class="form-field">
+            <label for="login-identity">Email atau Username</label>
+            <input type="text" id="login-identity" name="identity" placeholder="masukkan email atau username" required />
+          </div>
+          <div class="form-field">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" placeholder="masukkan password" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Masuk</button>
+        </form>
+        <div class="login-info">
+          <p><strong>Admin:</strong> admin / admin123</p>
+          <p><strong>Staf:</strong> staff / staff123</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="app" class="app hidden">
+      <aside class="sidebar">
+        <div class="brand">
+          <img id="sidebar-logo" src="assets/img/logo.svg" alt="Logo BPSDM Aceh" />
+          <div class="brand-text">
+            <h2 id="institution-title">BPSDM Aceh</h2>
+            <p>Sistem Arsip Surat</p>
+          </div>
+        </div>
+        <nav>
+          <ul id="nav-links" class="nav-list"></ul>
+        </nav>
+      </aside>
+
+      <div class="main-panel">
+        <header class="topbar">
+          <div>
+            <h1 id="page-title">Dashboard</h1>
+            <p id="institution-address" class="subtle"></p>
+          </div>
+          <div class="user-info">
+            <span class="user-name" id="user-name"></span>
+            <span class="user-role" id="user-role"></span>
+          </div>
+        </header>
+
+        <div id="alert-container" class="alert-container"></div>
+
+        <section id="admin-dashboard" class="page-section hidden">
+          <div class="section-header">
+            <h2>Ringkasan Admin</h2>
+            <p>Statistik surat masuk dan keluar BPSDM Aceh</p>
+          </div>
+          <div class="grid stats-grid">
+            <div class="card stat-card">
+              <div class="stat-icon bg-blue"><i class="fa-solid fa-inbox"></i></div>
+              <div>
+                <p class="stat-label">Surat Masuk</p>
+                <p class="stat-value" id="total-incoming">0</p>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon bg-green"><i class="fa-solid fa-paper-plane"></i></div>
+              <div>
+                <p class="stat-label">Surat Keluar</p>
+                <p class="stat-value" id="total-outgoing">0</p>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon bg-yellow"><i class="fa-solid fa-folder-tree"></i></div>
+              <div>
+                <p class="stat-label">Kategori Arsip</p>
+                <p class="stat-value" id="total-categories">0</p>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon bg-purple"><i class="fa-solid fa-users"></i></div>
+              <div>
+                <p class="stat-label">Pengguna Aktif</p>
+                <p class="stat-value" id="total-users">0</p>
+              </div>
+            </div>
+          </div>
+          <div class="grid dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>Grafik Surat Bulanan</h3>
+                <p class="subtle">Distribusi surat masuk dan keluar per bulan</p>
+              </div>
+              <canvas id="mail-chart" height="280"></canvas>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>Surat Terbaru</h3>
+                <p class="subtle">5 surat terakhir yang direkam</p>
+              </div>
+              <ul id="latest-mail-list" class="timeline-list"></ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="staff-dashboard" class="page-section hidden">
+          <div class="section-header">
+            <h2>Ringkasan Staf</h2>
+            <p>Aktivitas pengelolaan surat oleh staf</p>
+          </div>
+          <div class="grid stats-grid">
+            <div class="card stat-card">
+              <div class="stat-icon bg-green"><i class="fa-solid fa-clipboard-check"></i></div>
+              <div>
+                <p class="stat-label">Total Surat Dibuat</p>
+                <p class="stat-value" id="staff-total-created">0</p>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon bg-blue"><i class="fa-solid fa-inbox"></i></div>
+              <div>
+                <p class="stat-label">Surat Masuk Dibuat</p>
+                <p class="stat-value" id="staff-incoming-count">0</p>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon bg-yellow"><i class="fa-solid fa-paper-plane"></i></div>
+              <div>
+                <p class="stat-label">Surat Keluar Dibuat</p>
+                <p class="stat-value" id="staff-outgoing-count">0</p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>5 Surat Terakhir</h3>
+              <p class="subtle">Rekap surat yang Anda kelola</p>
+            </div>
+            <ul id="staff-latest-mails" class="timeline-list"></ul>
+          </div>
+        </section>
+
+        <section id="incoming-mail" class="page-section hidden">
+          <div class="section-header">
+            <h2>Manajemen Surat Masuk</h2>
+            <p>Data surat masuk dengan unggah arsip PDF</p>
+          </div>
+          <div class="grid two-column">
+            <div class="card table-card">
+              <div class="card-header">
+                <h3>Daftar Surat Masuk</h3>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>No. Surat</th>
+                      <th>Pengirim</th>
+                      <th>Tanggal</th>
+                      <th>Perihal</th>
+                      <th>Kategori</th>
+                      <th>Dibuat Oleh</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="incoming-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card form-card">
+              <div class="card-header">
+                <h3>Tambah Surat Masuk</h3>
+              </div>
+              <form id="incoming-form" class="form-grid">
+                <div class="form-field">
+                  <label for="incoming-number">Nomor Surat</label>
+                  <input type="text" id="incoming-number" required />
+                </div>
+                <div class="form-field">
+                  <label for="incoming-sender">Pengirim</label>
+                  <input type="text" id="incoming-sender" required />
+                </div>
+                <div class="form-field">
+                  <label for="incoming-date">Tanggal Surat</label>
+                  <input type="date" id="incoming-date" required />
+                </div>
+                <div class="form-field">
+                  <label for="incoming-subject">Perihal</label>
+                  <input type="text" id="incoming-subject" required />
+                </div>
+                <div class="form-field">
+                  <label for="incoming-category">Kategori</label>
+                  <select id="incoming-category" required></select>
+                </div>
+                <div class="form-field full">
+                  <label for="incoming-file">Unggah Berkas (PDF)</label>
+                  <input type="file" id="incoming-file" accept="application/pdf" required />
+                  <small class="subtle">Hanya PDF, maksimum 10 MB</small>
+                </div>
+                <div class="pdf-preview hidden" id="incoming-preview-wrapper">
+                  <embed id="incoming-preview" type="application/pdf" />
+                </div>
+                <button type="submit" class="btn btn-primary full">Simpan Surat Masuk</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="outgoing-mail" class="page-section hidden">
+          <div class="section-header">
+            <h2>Manajemen Surat Keluar</h2>
+            <p>Catat surat keluar dan unggah arsip PDF</p>
+          </div>
+          <div class="grid two-column">
+            <div class="card table-card">
+              <div class="card-header">
+                <h3>Daftar Surat Keluar</h3>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>No. Surat</th>
+                      <th>Penerima</th>
+                      <th>Tanggal</th>
+                      <th>Perihal</th>
+                      <th>Kategori</th>
+                      <th>Dibuat Oleh</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="outgoing-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card form-card">
+              <div class="card-header">
+                <h3>Tambah Surat Keluar</h3>
+              </div>
+              <form id="outgoing-form" class="form-grid">
+                <div class="form-field">
+                  <label for="outgoing-number">Nomor Surat</label>
+                  <input type="text" id="outgoing-number" required />
+                </div>
+                <div class="form-field">
+                  <label for="outgoing-recipient">Penerima</label>
+                  <input type="text" id="outgoing-recipient" required />
+                </div>
+                <div class="form-field">
+                  <label for="outgoing-date">Tanggal Surat</label>
+                  <input type="date" id="outgoing-date" required />
+                </div>
+                <div class="form-field">
+                  <label for="outgoing-subject">Perihal</label>
+                  <input type="text" id="outgoing-subject" required />
+                </div>
+                <div class="form-field">
+                  <label for="outgoing-category">Kategori</label>
+                  <select id="outgoing-category" required></select>
+                </div>
+                <div class="form-field full">
+                  <label for="outgoing-file">Unggah Berkas (PDF)</label>
+                  <input type="file" id="outgoing-file" accept="application/pdf" required />
+                  <small class="subtle">Hanya PDF, maksimum 10 MB</small>
+                </div>
+                <div class="pdf-preview hidden" id="outgoing-preview-wrapper">
+                  <embed id="outgoing-preview" type="application/pdf" />
+                </div>
+                <button type="submit" class="btn btn-primary full">Simpan Surat Keluar</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="mail-categories" class="page-section hidden">
+          <div class="section-header">
+            <h2>Kategori Surat</h2>
+            <p>Kelola kategori surat untuk pengelompokan arsip</p>
+          </div>
+          <div class="grid two-column">
+            <div class="card table-card">
+              <div class="card-header">
+                <h3>Daftar Kategori</h3>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nama Kategori</th>
+                      <th>Deskripsi</th>
+                      <th>Total Surat</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="category-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card form-card">
+              <div class="card-header">
+                <h3>Tambah / Ubah Kategori</h3>
+              </div>
+              <form id="category-form" class="form-grid">
+                <input type="hidden" id="category-id" />
+                <div class="form-field">
+                  <label for="category-name">Nama Kategori</label>
+                  <input type="text" id="category-name" required />
+                </div>
+                <div class="form-field full">
+                  <label for="category-description">Deskripsi</label>
+                  <textarea id="category-description" rows="3" required></textarea>
+                </div>
+                <div class="form-actions">
+                  <button type="reset" class="btn btn-light" id="category-reset">Bersihkan</button>
+                  <button type="submit" class="btn btn-primary">Simpan Kategori</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="reports" class="page-section hidden">
+          <div class="section-header">
+            <h2>Laporan Surat</h2>
+            <p>Bangun laporan surat masuk atau keluar berdasarkan periode</p>
+          </div>
+          <div class="card">
+            <form id="report-filter" class="form-grid">
+              <div class="form-field">
+                <label for="report-type">Jenis Surat</label>
+                <select id="report-type">
+                  <option value="all">Semua</option>
+                  <option value="incoming">Surat Masuk</option>
+                  <option value="outgoing">Surat Keluar</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="report-period">Periode Laporan</label>
+                <select id="report-period" required>
+                  <option value="monthly">Bulanan</option>
+                  <option value="daily">Harian</option>
+                  <option value="yearly">Tahunan</option>
+                </select>
+              </div>
+              <div class="form-field full" id="report-period-fields"></div>
+              <button type="submit" class="btn btn-primary">Tampilkan Laporan</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="card-header actions">
+              <div>
+                <h3>Hasil Laporan</h3>
+                <p class="subtle">Gunakan tombol ekspor untuk menyimpan laporan</p>
+              </div>
+              <div class="button-group">
+                <button class="btn btn-light" id="export-pdf"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                <button class="btn btn-light" id="export-excel"><i class="fa-solid fa-file-excel"></i> Excel</button>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table id="report-table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>No. Surat</th>
+                    <th>Jenis</th>
+                    <th>Pengirim/Penerima</th>
+                    <th>Tanggal</th>
+                    <th>Perihal</th>
+                    <th>Kategori</th>
+                  </tr>
+                </thead>
+                <tbody id="report-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="user-management" class="page-section hidden">
+          <div class="section-header">
+            <h2>Manajemen Pengguna</h2>
+            <p>Kelola akun staf pengelola arsip surat</p>
+          </div>
+          <div class="grid two-column">
+            <div class="card table-card">
+              <div class="card-header">
+                <h3>Daftar Pengguna</h3>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nama</th>
+                      <th>Email</th>
+                      <th>Peran</th>
+                      <th>Status</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="user-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card form-card">
+              <div class="card-header">
+                <h3>Tambah Pengguna</h3>
+              </div>
+              <form id="user-form" class="form-grid">
+                <div class="form-field">
+                  <label for="user-name">Nama Lengkap</label>
+                  <input type="text" id="user-name" required />
+                </div>
+                <div class="form-field">
+                  <label for="user-email">Email</label>
+                  <input type="email" id="user-email" required />
+                </div>
+                <div class="form-field">
+                  <label for="user-username">Username</label>
+                  <input type="text" id="user-username" required />
+                </div>
+                <div class="form-field">
+                  <label for="user-password">Password</label>
+                  <input type="password" id="user-password" required />
+                </div>
+                <div class="form-field">
+                  <label for="user-role">Peran</label>
+                  <select id="user-role" required>
+                    <option value="staff">Staf</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan Pengguna</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="system-settings" class="page-section hidden">
+          <div class="section-header">
+            <h2>Pengaturan Sistem</h2>
+            <p>Pembaruan identitas instansi dan pengaturan arsip</p>
+          </div>
+          <div class="grid two-column">
+            <div class="card form-card">
+              <div class="card-header">
+                <h3>Identitas Instansi</h3>
+              </div>
+              <form id="institution-form" class="form-grid">
+                <div class="form-field">
+                  <label for="institution-name">Nama Instansi</label>
+                  <input type="text" id="institution-name" required />
+                </div>
+                <div class="form-field full">
+                  <label for="institution-address">Alamat Instansi</label>
+                  <textarea id="institution-address-input" rows="3" required></textarea>
+                </div>
+                <div class="form-field full">
+                  <label for="institution-logo">Logo Instansi</label>
+                  <input type="file" id="institution-logo" accept="image/*" />
+                  <small class="subtle">Format gambar (PNG, JPG, SVG)</small>
+                </div>
+                <div class="logo-preview">
+                  <img id="logo-preview" src="assets/img/logo.svg" alt="Pratinjau Logo" />
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan Identitas</button>
+              </form>
+            </div>
+            <div class="card form-card">
+              <div class="card-header">
+                <h3>Pengaturan Berkas &amp; Basis Data</h3>
+              </div>
+              <form id="file-settings-form" class="form-grid">
+                <div class="form-field">
+                  <label for="max-file-size">Maksimum Ukuran Berkas (MB)</label>
+                  <input type="number" id="max-file-size" min="1" max="50" required />
+                </div>
+                <div class="form-field full">
+                  <label>Jenis Berkas Diizinkan</label>
+                  <p class="subtle">PDF saja (application/pdf)</p>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                </div>
+              </form>
+              <div class="divider"></div>
+              <div class="backup-actions">
+                <h4>Cadangkan &amp; Pulihkan Data</h4>
+                <p class="subtle">Unduh cadangan data lokal atau unggah berkas JSON untuk pemulihan.</p>
+                <div class="button-group">
+                  <button class="btn btn-light" id="backup-btn"><i class="fa-solid fa-download"></i> Unduh Backup</button>
+                  <label for="restore-input" class="btn btn-light"><i class="fa-solid fa-upload"></i> Pulihkan Data</label>
+                  <input type="file" id="restore-input" accept="application/json" hidden />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha256-kSfmY1BDWLhFymzT6z9s0glcSvZo2aPahQ7PsVm0mPI=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/s1tmOJo2Qd0k51n6dOEfylAUxOleh6AFRKOhPeK05QDjrqYVBsG4HQxEjSknxXLhIZPDS20PWPW1CZuIUHTLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js" integrity="sha512-R28uQgmO6ijLJrVN6aCMGN28AL/fOHnqd7qV671CyMfCVxYvBy06SnVAk0nnBYnCTsRmR271GGBqBPdZiZsaIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha512-QW9jwELyhl725LLJoPLt114F8CbnMD4HzyBbs6k8ZZrVSu2CevulaHYodEc/WWEDuJeayQMZT6ZX0hgqP/d9OA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
