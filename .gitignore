@@ -1,0 +1,5 @@
+/node_modules
+/public/assets
+/storage/backups/*.sql
+/storage/framework/*
+/storage/logs/*

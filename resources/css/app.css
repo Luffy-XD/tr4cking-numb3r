@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f6fa;
+}
+
+.sidebar {
+    min-width: 250px;
+    background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+    color: #f9fafb;
+}
+
+.sidebar a {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    color: inherit;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+    background-color: rgba(59, 130, 246, 0.2);
+    transform: translateX(4px);
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    padding: 1.5rem;
+}
+
+.table-wrapper {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.badge {
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #047857;
+}
+
+.badge-warning {
+    background-color: rgba(251, 191, 36, 0.15);
+    color: #92400e;
+}
+
+.modal {
+    background-color: rgba(15, 23, 42, 0.45);
+}
