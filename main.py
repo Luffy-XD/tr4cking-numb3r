@@ -309,7 +309,7 @@ def register_device():
 				buy_key = console.input(f"{H2} • {P2}Tekan enter untuk chat whatsapp author untuk membeli key")
 				if buy_key in [""]:pass
 				jalan(f'   Anda akan diarahkan ke whatsapp author');time.sleep(2)
-				os.system(f'xdg-open http://wa.me/+6282316671302?text=Bang+beli+aktivasi+licensi+script+nya+{key}')
+				os.system(f'xdg-open http://wa.me/+6282316671302?text=Bang+beli+aktivasi+key+script+nya+{key}')
 		if not os.path.exists(".license"):
 			key_gen = random.randint(10000000,99999999)
 			enc_key = base64.b16encode(str(key_gen).encode()).decode("utf-8")
@@ -1361,4 +1361,5 @@ if __name__ == "__main__":
     except:
         pass
     register_device()
+
     
